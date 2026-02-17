@@ -57,6 +57,9 @@ public class Solution {
                 if (arrStr[i].equals(arrStr[j])) {
                     Arrays.fill(arrStr, "_");
                 }
+                else {
+                    arrStr[i] = arrStr[j];
+                }
             }
         }
 

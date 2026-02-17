@@ -1,0 +1,24 @@
+                            Throwable (класс-родитель всех исключений)
+                            /                                      \
+                           /                                        \
+                          /                                          \
+            Error (Критические ошибки)                   Exception (Исключения)
+            (Unchecked - Не проверяемые)                             |
+                                                                     |
+                    ┌─────────────────────────────────────────────────────┐
+                    │                                                     │
+         RuntimeException                                       IOException
+         (Unchecked - Не проверяемые)                          (Checked - Проверяемые)
+                    │                                                     │
+    ┌───────────────┼───────────────┐                         ┌──────────┴──────────┐
+    │               │               │                         │                     │
+ClassCastException  │    NullPointerException       FileNotFoundException  SQLException
+    │               │               │                         │                     │
+    │               │               │                         │                     │
+IllegalArgumentException   ArrayIndexOutOfBoundsException     ...                   ...
+    │               │               │
+    │               │               │
+NumberFormatException     ArithmeticException                 ... другие checked исключения
+    │               │               │
+    │               │               │
+    ...             ...             ...

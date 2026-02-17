@@ -2,6 +2,7 @@ package itmoLessons.kursovaya.fitness;
 
 import itmoLessons.kursovaya.fitness.base.SubscriptionType;
 
+//нейминг
 abstract class Clients {
     private String name;
     private String lastName;

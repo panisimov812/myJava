@@ -19,9 +19,9 @@ public class Application {
                 "1984-11-06",
                 FULL_PASS);
 
-      //  petr.setExpireDateRegistration();
+        //  petr.setExpireDateRegistration();
 
-      //  gym.addToPool(alex);
+        //  gym.addToPool(alex);
     gym.addToPool(petr);
     gym.addToGym(petr);
         gym.printSwimmingPool();
