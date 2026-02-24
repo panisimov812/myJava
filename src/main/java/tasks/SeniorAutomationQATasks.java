@@ -8,6 +8,9 @@ import java.util.stream.*;
 // ======================= 1–5: Коллекции и строки =======================
 class Tasks1to5 {
 
+    // 1️⃣ findDuplicates
+    // Возвращает список элементов, которые встречаются более одного раза
+    // Подсказка: использовать Stream API, groupingBy, scalability
     public static List<String> findDuplicates(List<String> list) {
         Map<String, Long> counts = list.stream()
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
@@ -17,12 +20,18 @@ class Tasks1to5 {
                 .collect(Collectors.toList());
     }
 
+    // 2️⃣ charFrequency
+    // Считает, сколько раз каждый символ встречается в строке
+    // Подсказка: функциональный подход, groupingBy
     public static Map<Character, Long> charFrequency(String text) {
         return text.chars()
                 .mapToObj(c -> (char) c)
                 .collect(Collectors.groupingBy(c -> c, Collectors.counting()));
     }
 
+    // 3️⃣ reverseString
+    // Переворачивает строку без использования StringBuilder.reverse()
+    // Подсказка: in-place swap, memory efficient
     public static String reverseString(String text) {
         char[] chars = text.toCharArray();
         int n = chars.length;
@@ -34,6 +43,9 @@ class Tasks1to5 {
         return new String(chars);
     }
 
+    // 4️⃣ mergeFilterSort
+    // Объединяет два списка чисел, удаляет дубликаты, оставляет только >10, сортирует по убыванию
+    // Подсказка: Stream.concat, distinct, filter, sorted
     public static List<Integer> mergeFilterSort(List<Integer> list1, List<Integer> list2) {
         return Stream.concat(list1.stream(), list2.stream())
                 .distinct()
@@ -42,6 +54,9 @@ class Tasks1to5 {
                 .collect(Collectors.toList());
     }
 
+    // 5️⃣ isPalindrome
+    // Проверяет, является ли строка палиндромом (без учета регистра и спец. символов)
+    // Подсказка: normalize + reverse, clean code
     public static boolean isPalindrome(String text) {
         String cleaned = text.toLowerCase().replaceAll("[^a-z0-9]", "");
         return new StringBuilder(cleaned).reverse().toString().equals(cleaned);
@@ -72,6 +87,8 @@ class TestCase {
                 '}';
     }
 
+    // 6️⃣ Builder Pattern
+    // Позволяет создавать объекты TestCase с читаемым кодом (Fluent API)
     public static class Builder {
         private String name;
         private List<String> steps = new ArrayList<>();
@@ -86,90 +103,59 @@ class TestCase {
     }
 }
 
-interface Role {
-    void login();
-}
+// 7️⃣ Strategy Roles
+// Демонстрирует полиморфизм и стратегию для ролей пользователей
+interface Role { void login(); }
 
-class UserRole implements Role {
-    public void login() { System.out.println("User login"); }
-}
-class AdminRole implements Role {
-    public void login() { System.out.println("Admin login"); }
-}
-class GuestRole implements Role {
-    public void login() { System.out.println("Guest login"); }
-}
+class UserRole implements Role { public void login() { System.out.println("User login"); } }
+class AdminRole implements Role { public void login() { System.out.println("Admin login"); } }
+class GuestRole implements Role { public void login() { System.out.println("Guest login"); } }
 
+// 8️⃣ User DTO
+// Переопределение equals/hashCode для корректной работы в коллекциях
 class User {
-    private int id;
-    private String name;
-    private String email;
-
-    public User(int id, String name, String email){
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
-
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
+    private int id; private String name; private String email;
+    public User(int id, String name, String email){ this.id=id; this.name=name; this.email=email; }
+    public String getName(){ return name; }
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return true;
+        if(this==o) return true;
         if(!(o instanceof User)) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(email, user.email);
+        User u = (User) o;
+        return id==u.id && Objects.equals(email,u.email);
     }
 
     @Override
-    public int hashCode(){
-        return Objects.hash(id, email);
-    }
+    public int hashCode(){ return Objects.hash(id,email); }
 }
 
+// 9️⃣ BankTransaction Immutable
+// Thread-safe, неизменяемый объект
 final class BankTransaction {
-    private final String id;
-    private final double amount;
-
-    public BankTransaction(String id, double amount){
-        this.id = id;
-        this.amount = amount;
-    }
-    public String getId(){ return id; }
-    public double getAmount(){ return amount; }
+    private final String id; private final double amount;
+    public BankTransaction(String id, double amount){ this.id=id; this.amount=amount; }
+    public String getId(){ return id; } public double getAmount(){ return amount; }
 }
 
-interface PaymentMethod {
-    void pay(double amount);
-}
-
-class CreditCardPayment implements PaymentMethod {
-    public void pay(double amount){ System.out.println("Paid " + amount + " by CreditCard"); }
-}
-class PayPalPayment implements PaymentMethod {
-    public void pay(double amount){ System.out.println("Paid " + amount + " by PayPal"); }
-}
-
-class PaymentProcessor {
-    public void processPayment(PaymentMethod method, double amount){
-        method.pay(amount);
-    }
-}
+// 10️⃣ PaymentProcessor
+// Применяет принцип Open-Closed, позволяет добавлять новые методы оплаты без изменения кода
+interface PaymentMethod { void pay(double amount); }
+class CreditCardPayment implements PaymentMethod { public void pay(double amount){ System.out.println("Paid " + amount + " by CreditCard"); } }
+class PayPalPayment implements PaymentMethod { public void pay(double amount){ System.out.println("Paid " + amount + " by PayPal"); } }
+class PaymentProcessor { public void processPayment(PaymentMethod method, double amount){ method.pay(amount); } }
 
 // ======================= 11–15: Concurrency / Threading =======================
 class Tasks11to15 {
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
-
-    // 11. Producer-Consumer
+    // 11️⃣ Producer-Consumer
+    // Демонстрирует безопасную коммуникацию между потоками через BlockingQueue
     public static void producerConsumerExample() throws InterruptedException {
         BlockingQueue<Integer> queue = new ArrayBlockingQueue<>(5);
         Runnable producer = () -> {
             try {
                 for (int i = 1; i <= 5; i++) {
-                    queue.put(i);
+                    queue.put(i); // thread-safe
                     System.out.println("Produced: " + i);
                 }
             } catch (InterruptedException ignored) {}
@@ -185,9 +171,12 @@ class Tasks11to15 {
         Thread t2 = new Thread(consumer);
         t1.start(); t2.start();
         t1.join(); t2.join();
+        // Подсказка: покажи знание BlockingQueue, thread-safe, concurrency
     }
 
-    // 12. Race condition fix
+    // 12️⃣ Race condition fix
+    // Несколько потоков увеличивают счётчик, используем AtomicInteger для безопасности
+    private static final AtomicInteger counter = new AtomicInteger(0);
     public static void incrementCounter() throws InterruptedException {
         Runnable r = () -> { for(int i=0;i<1000;i++) counter.incrementAndGet(); };
         Thread t1 = new Thread(r);
@@ -195,9 +184,11 @@ class Tasks11to15 {
         t1.start(); t2.start();
         t1.join(); t2.join();
         System.out.println("Counter = " + counter.get()); // должно быть 2000
+        // Подсказка: объяснить race condition и как AtomicInteger её решает
     }
 
-    // 13. CompletableFuture parallel
+    // 13️⃣ CompletableFuture parallel
+    // Запускаем несколько задач параллельно и собираем результаты
     public static void completableFutureExample() throws Exception {
         List<CompletableFuture<String>> futures = new ArrayList<>();
         for(int i=0;i<5;i++){
@@ -206,23 +197,26 @@ class Tasks11to15 {
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         futures.forEach(f -> System.out.println(f.join()));
+        // Подсказка: async processing, non-blocking, clean code
     }
 
-    // 14. CountDownLatch
+    // 14️⃣ CountDownLatch
+    // Потоки ждут инициализации главного потока
     public static void countDownLatchExample() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         Runnable worker = () -> {
             try {
-                latch.await();
+                latch.await(); // ждём главного потока
                 System.out.println(Thread.currentThread().getName() + " started after latch");
             } catch (InterruptedException ignored) {}
         };
         for(int i=0;i<3;i++) new Thread(worker).start();
         Thread.sleep(100); // имитация инициализации
-        latch.countDown();
+        latch.countDown(); // отпускаем все потоки
     }
 
-    // 15. Thread-safe Singleton
+    // 15️⃣ Thread-safe Singleton
+    // Реализация ленивого Singleton с double-checked locking
     static class Singleton {
         private static volatile Singleton instance;
         private Singleton(){}
@@ -240,13 +234,16 @@ class Tasks11to15 {
 // ======================= 16–20: Backend / API / DB =======================
 class Tasks16to20 {
 
-    // 16. JSON parsing simulation (list of users)
+    // 16️⃣ JSON Filtering
+    // Фильтрует список пользователей старше 18 лет
     static class JsonUser { int age; String name; JsonUser(int age,String name){this.age=age;this.name=name;} }
     public static List<JsonUser> filterAdultUsers(List<JsonUser> users){
         return users.stream().filter(u -> u.age >= 18).collect(Collectors.toList());
+        // Подсказка: Stream API, functional programming
     }
 
-    // 17. Check DB duplicates simulation
+    // 17️⃣ Find duplicate emails
+    // Находит дубли email в списке пользователей
     static class DBUser { int id; String email; DBUser(int id, String email){this.id=id;this.email=email;} }
     public static List<String> findDuplicateEmails(List<DBUser> users){
         Map<String, Long> counts = users.stream()
@@ -255,9 +252,11 @@ class Tasks16to20 {
                 .filter(e -> e.getValue() > 1)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+        // Подсказка: Map + groupingBy, объяснить на примере реальной БД
     }
 
-    // 18. Async API simulation
+    // 18️⃣ Async API simulation
+    // Параллельный запуск запросов и сбор результатов
     public static void asyncApiExample() {
         List<CompletableFuture<String>> futures = new ArrayList<>();
         for(int i=0;i<5;i++){
@@ -266,18 +265,21 @@ class Tasks16to20 {
         }
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         futures.forEach(f -> System.out.println(f.join()));
+        // Подсказка: показать async, non-blocking, collect results
     }
 
-    // 19. Kafka simulation
+    // 19️⃣ Kafka simulation
+    // Имитация consumer очереди (FIFO)
     public static void kafkaSimulation() {
         Queue<String> topic = new LinkedList<>();
         topic.add("msg1"); topic.add("msg2");
         while(!topic.isEmpty()) System.out.println("Consumed: " + topic.poll());
+        // Подсказка: FIFO, message queue, integration test example
     }
 
-    // 20. Idempotency simulation
+    // 20️⃣ Idempotency simulation
+    // Защита от повторной обработки одного и того же запроса
     private static final Set<String> processedIds = new HashSet<>();
-
     public static void postTransfer(String id){
         if(processedIds.contains(id)){
             System.out.println("Already processed: " + id);
@@ -285,6 +287,7 @@ class Tasks16to20 {
             processedIds.add(id);
             System.out.println("Processed: " + id);
         }
+        // Подсказка: idempotency, critical for banking transactions
     }
 }
 
